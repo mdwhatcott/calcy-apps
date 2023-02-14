@@ -6,7 +6,7 @@ import (
 	"io"
 	"strconv"
 
-	"calcy"
+	"github.com/mdwhatcott/calcy-lib/calcy"
 )
 
 type CLIHandler struct {

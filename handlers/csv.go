@@ -8,7 +8,7 @@ import (
 	"log"
 	"strconv"
 
-	"calcy"
+	"github.com/mdwhatcott/calcy-lib/calcy"
 )
 
 type CSVHandler struct {

@@ -5,7 +5,7 @@ import (
 	"errors"
 	"testing"
 
-	"calcy"
+	"github.com/mdwhatcott/calcy-lib/calcy"
 )
 
 func TestCLIHandler(t *testing.T) {

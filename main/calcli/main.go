@@ -5,8 +5,8 @@ import (
 	"log"
 	"os"
 
-	"calcy"
-	"calcy/handlers"
+	"github.com/mdwhatcott/calcy-apps/handlers"
+	"github.com/mdwhatcott/calcy-lib/calcy"
 )
 
 func main() {

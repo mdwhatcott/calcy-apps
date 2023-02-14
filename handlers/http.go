@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"calcy"
+	"github.com/mdwhatcott/calcy-lib/calcy"
 )
 
 func NewHTTPRouter() http.Handler {
