@@ -10,6 +10,7 @@ import (
 )
 
 func main() {
+	log.SetFlags(log.Ltime | log.Lshortfile)
 	var op string
 	flag.StringVar(&op, "op", "+", "Pick one: + - * / ?")
 	flag.Parse()
