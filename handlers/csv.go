@@ -78,7 +78,7 @@ var (
 	csvWriteError = errors.New("csv write error")
 )
 
-var calculators = map[string]calcy.Calculator{
+var calculators = map[string]Calculator{
 	"+": calcy.Addition{},
 	"-": calcy.Subtraction{},
 	"*": calcy.Multiplication{},

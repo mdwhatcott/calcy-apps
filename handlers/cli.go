@@ -5,16 +5,14 @@ import (
 	"fmt"
 	"io"
 	"strconv"
-
-	"github.com/mdwhatcott/calcy-lib/calcy"
 )
 
 type CLIHandler struct {
-	calc   calcy.Calculator
+	calc   Calculator
 	output io.Writer
 }
 
-func NewCLIHandler(calculator calcy.Calculator, output io.Writer) *CLIHandler {
+func NewCLIHandler(calculator Calculator, output io.Writer) *CLIHandler {
 	return &CLIHandler{calc: calculator, output: output}
 }
 

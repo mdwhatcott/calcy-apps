@@ -27,7 +27,7 @@ func main() {
 	}
 }
 
-var calculators = map[string]calcy.Calculator{
+var calculators = map[string]handlers.Calculator{
 	"+": calcy.Addition{},
 	"-": calcy.Subtraction{},
 	"*": calcy.Multiplication{},

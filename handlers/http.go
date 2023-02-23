@@ -20,10 +20,10 @@ func NewHTTPRouter() http.Handler {
 }
 
 type HTTPHandler struct {
-	calculator calcy.Calculator
+	calculator Calculator
 }
 
-func NewHTTPHandler(calculator calcy.Calculator) http.Handler {
+func NewHTTPHandler(calculator Calculator) http.Handler {
 	return &HTTPHandler{calculator: calculator}
 }
 
