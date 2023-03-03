@@ -15,11 +15,7 @@ func main() {
 	flag.StringVar(&op, "op", "+", "Pick one: + - * / ?")
 	flag.Parse()
 
-	calculator, ok := calculators[op]
-	if !ok {
-		log.Fatalln("unsupported operand:", op)
-	}
-	handler := handlers.NewCLIHandler(calculator, os.Stdout)
+	handler := handlers.NewCLIHandler(calculators[op], os.Stdout)
 
 	err := handler.Handle(flag.Args())
 	if err != nil {
