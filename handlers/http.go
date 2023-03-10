@@ -46,7 +46,7 @@ func (this *HTTPHandler) ServeHTTP(writer http.ResponseWriter, request *http.Req
 		return
 	}
 
-	writer.WriteHeader(200)
+	writer.WriteHeader(http.StatusOK)
 	_, err = fmt.Fprintln(writer, this.calculator.Calculate(a, b))
 	if err != nil {
 		log.Println("Failed to write response:", err)
