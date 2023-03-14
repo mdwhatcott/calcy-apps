@@ -51,7 +51,7 @@ func TestCSVHandler(t *testing.T) {
 		t.Log("Log Output:\n" + logOutput.String())
 	}
 }
-func TestHandler_ReadError(t *testing.T) {
+func TestCSVHandler_ReadError(t *testing.T) {
 	var logOutput bytes.Buffer
 	logger := log.New(&logOutput, "", 0)
 	innerErr := errors.New("boink")
@@ -68,7 +68,7 @@ func TestHandler_ReadError(t *testing.T) {
 		t.Error("unexpected error:", err)
 	}
 }
-func TestHandler_WriteError(t *testing.T) {
+func TestCSVHandler_WriteError(t *testing.T) {
 	var logOutput bytes.Buffer
 	logger := log.New(&logOutput, "", 0)
 	input := strings.NewReader(inputCSV)
