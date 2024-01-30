@@ -4,6 +4,8 @@ import (
 	"os/exec"
 	"strings"
 	"testing"
+
+	"github.com/mdwhatcott/calcy-apps/ext/should"
 )
 
 func TestCLI(t *testing.T) {
@@ -11,12 +13,9 @@ func TestCLI(t *testing.T) {
 		t.Skip("long-running test")
 	}
 	cmd := exec.Command("go", "run", "github.com/mdwhatcott/calcy-apps/main/calc-cli", "-op", "+", "3", "4")
+
 	out, err := cmd.CombinedOutput()
-	if err != nil {
-		t.Fatal("Unexpected error:", err)
-	}
-	output := strings.TrimSpace(string(out))
-	if output != "7" {
-		t.Error("Want 7, got", output)
-	}
+
+	should.So(t, err, should.BeNil)
+	should.So(t, strings.TrimSpace(string(out)), should.Equal, "7")
 }

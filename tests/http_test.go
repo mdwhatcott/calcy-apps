@@ -8,6 +8,8 @@ import (
 	"strings"
 	"testing"
 	"time"
+
+	"github.com/mdwhatcott/calcy-apps/ext/should"
 )
 
 func TestHTTP(t *testing.T) {
@@ -50,12 +52,7 @@ func TestHTTP(t *testing.T) {
 	}
 
 	out, err := io.ReadAll(response.Body)
-	if err != nil {
-		t.Fatal("unexpected error:", err)
-	}
 
-	output := strings.TrimSpace(string(out))
-	if output != "7" {
-		t.Error("Want 7, got", output)
-	}
+	should.So(t, err, should.BeNil)
+	should.So(t, strings.TrimSpace(string(out)), should.Equal, "7")
 }

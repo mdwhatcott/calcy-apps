@@ -5,6 +5,8 @@ import (
 	"os/exec"
 	"strings"
 	"testing"
+
+	"github.com/mdwhatcott/calcy-apps/ext/should"
 )
 
 var inputCSV = strings.Join([]string{
@@ -35,12 +37,9 @@ func TestCSV(t *testing.T) {
 	cmd := exec.Command("go", "run", "github.com/mdwhatcott/calcy-apps/main/calc-csv")
 	cmd.Stdin = strings.NewReader(inputCSV)
 	cmd.Stdout = stdOut
+
 	err := cmd.Run()
-	if err != nil {
-		t.Fatal("Unexpected error:", err)
-	}
-	if stdOut.String() != expectedOutputCSV {
-		t.Error("Want:", expectedOutputCSV)
-		t.Error("Got: ", stdOut.String())
-	}
+
+	should.So(t, err, should.BeNil)
+	should.So(t, stdOut.String(), should.Equal, expectedOutputCSV)
 }

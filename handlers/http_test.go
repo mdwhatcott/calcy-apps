@@ -5,16 +5,14 @@ import (
 	"net/http/httptest"
 	"strings"
 	"testing"
+
+	"github.com/mdwhatcott/calcy-apps/ext/should"
 )
 
 func TestHTTPHandler_404(t *testing.T) {
-	handler := NewHTTPRouter()
-	request := httptest.NewRequest(http.MethodGet, "/nope?a=1&b=2", nil)
 	response := httptest.NewRecorder()
-	handler.ServeHTTP(response, request)
-	if response.Code != http.StatusNotFound {
-		t.Error("want 404, got:", response.Code)
-	}
+	NewHTTPRouter().ServeHTTP(response, httptest.NewRequest(http.MethodGet, "/nope?a=1&b=2", nil))
+	should.So(t, response.Code, should.Equal, http.StatusNotFound)
 }
 func TestHTTPHandler_200(t *testing.T) {
 	testHTTP200(t, "/add?a=1&b=2", "3")
@@ -24,41 +22,29 @@ func TestHTTPHandler_200(t *testing.T) {
 	testHTTP200(t, "/bog?a=1&b=2", "45")
 }
 func testHTTP200(t *testing.T, path, expectedResponseBody string) {
-	handler := NewHTTPRouter()
-	request := httptest.NewRequest(http.MethodGet, path, nil)
-	response := httptest.NewRecorder()
-	handler.ServeHTTP(response, request)
-	if response.Code != http.StatusOK {
-		t.Error("non-200 status:", response.Code)
-	}
-	actualResponseBody := strings.TrimSpace(response.Body.String())
-	if actualResponseBody != expectedResponseBody {
-		t.Errorf("want '%s', got: '%s'", expectedResponseBody, actualResponseBody)
-	}
+	t.Run(strings.TrimLeft(path, "/"), func(t *testing.T) {
+		handler := NewHTTPRouter()
+		request := httptest.NewRequest(http.MethodGet, path, nil)
+		response := httptest.NewRecorder()
+		handler.ServeHTTP(response, request)
+		should.So(t, response.Code, should.Equal, http.StatusOK)
+		actualResponseBody := strings.TrimSpace(response.Body.String())
+		should.So(t, actualResponseBody, should.Equal, expectedResponseBody)
+	})
 }
 func TestHTTPHandler_422_InvalidArgA(t *testing.T) {
 	handler := NewHTTPRouter()
 	request := httptest.NewRequest(http.MethodGet, "/add?a=NaN&b=2", nil)
 	response := httptest.NewRecorder()
 	handler.ServeHTTP(response, request)
-	if response.Code != http.StatusUnprocessableEntity {
-		t.Error("want 422, got:", response.Code)
-	}
-	responseBody := strings.TrimSpace(response.Body.String())
-	if responseBody != "invalid 'a' parameter: [NaN]" {
-		t.Error("bad response body:", responseBody)
-	}
+	should.So(t, response.Code, should.Equal, http.StatusUnprocessableEntity)
+	should.So(t, strings.TrimSpace(response.Body.String()), should.Equal, "invalid 'a' parameter: [NaN]")
 }
 func TestHTTPHandler_422_InvalidArgB(t *testing.T) {
 	handler := NewHTTPRouter()
 	request := httptest.NewRequest(http.MethodGet, "/add?a=1&b=NaN", nil)
 	response := httptest.NewRecorder()
 	handler.ServeHTTP(response, request)
-	if response.Code != http.StatusUnprocessableEntity {
-		t.Error("want 422, got:", response.Code)
-	}
-	responseBody := strings.TrimSpace(response.Body.String())
-	if responseBody != "invalid 'b' parameter: [NaN]" {
-		t.Error("bad response body:", responseBody)
-	}
+	should.So(t, response.Code, should.Equal, http.StatusUnprocessableEntity)
+	should.So(t, strings.TrimSpace(response.Body.String()), should.Equal, "invalid 'b' parameter: [NaN]")
 }

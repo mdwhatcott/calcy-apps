@@ -6,6 +6,8 @@ import (
 	"log"
 	"strings"
 	"testing"
+
+	"github.com/mdwhatcott/calcy-apps/ext/should"
 )
 
 var inputCSV = strings.Join([]string{
@@ -37,16 +39,8 @@ func TestCSVHandler(t *testing.T) {
 
 	err := handler.Handle()
 
-	if err != nil {
-		t.Error("unexpected error:", err)
-	}
-	actual := output.String()
-	if actual != expectedOutputCSV {
-		t.Errorf(""+
-			"expected:\n------%s\n------\n\n"+
-			"actual:\n------%s\n------",
-			expectedOutputCSV, actual)
-	}
+	should.So(t, err, should.BeNil)
+	should.So(t, output.String(), should.Equal, expectedOutputCSV)
 	if t.Failed() {
 		t.Log("Log Output:\n" + logOutput.String())
 	}
@@ -61,12 +55,8 @@ func TestCSVHandler_ReadError(t *testing.T) {
 
 	err := handler.Handle()
 
-	if !errors.Is(err, innerErr) {
-		t.Error("unexpected error:", err)
-	}
-	if !errors.Is(err, csvReadError) {
-		t.Error("unexpected error:", err)
-	}
+	should.So(t, err, should.Wrap, innerErr)
+	should.So(t, err, should.Wrap, csvReadError)
 }
 func TestCSVHandler_WriteError(t *testing.T) {
 	var logOutput bytes.Buffer
@@ -78,12 +68,8 @@ func TestCSVHandler_WriteError(t *testing.T) {
 
 	err := handler.Handle()
 
-	if !errors.Is(err, innerErr) {
-		t.Error("unexpected error:", err)
-	}
-	if !errors.Is(err, csvWriteError) {
-		t.Error("unexpected error:", err)
-	}
+	should.So(t, err, should.Wrap, innerErr)
+	should.So(t, err, should.Wrap, csvWriteError)
 }
 
 type ErringReader struct{ err error }
