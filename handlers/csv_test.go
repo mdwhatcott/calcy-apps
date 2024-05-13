@@ -7,7 +7,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/mdwhatcott/calcy-apps/ext/should"
+	"github.com/smarty/assertions/should"
 )
 
 var inputCSV = strings.Join([]string{

@@ -6,13 +6,13 @@ import (
 	"io"
 	"testing"
 
-	"github.com/mdwhatcott/calcy-apps/ext/gunit"
-	"github.com/mdwhatcott/calcy-apps/ext/should"
 	"github.com/mdwhatcott/calcy-lib/calcy"
+	"github.com/smarty/assertions/should"
+	"github.com/smarty/gunit"
 )
 
 func TestCLIHandler(t *testing.T) {
-	gunit.Run(t, &CLIHandlerFixture{})
+	gunit.Run(new(CLIHandlerFixture), t)
 }
 
 type CLIHandlerFixture struct {

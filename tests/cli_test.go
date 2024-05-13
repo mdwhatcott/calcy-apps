@@ -5,7 +5,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/mdwhatcott/calcy-apps/ext/should"
+	"github.com/smarty/assertions/should"
 )
 
 func TestCLI(t *testing.T) {

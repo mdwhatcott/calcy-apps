@@ -9,7 +9,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/mdwhatcott/calcy-apps/ext/should"
+	"github.com/smarty/assertions/should"
 )
 
 func TestHTTP(t *testing.T) {

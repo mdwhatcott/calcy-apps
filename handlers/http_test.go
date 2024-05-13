@@ -6,12 +6,12 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/mdwhatcott/calcy-apps/ext/gunit"
-	"github.com/mdwhatcott/calcy-apps/ext/should"
+	"github.com/smarty/assertions/should"
+	"github.com/smarty/gunit"
 )
 
 func TestHTTPHandler(t *testing.T) {
-	gunit.Run(t, &HTTPHandlerFixture{})
+	gunit.Run(new(HTTPHandlerFixture), t)
 }
 
 type HTTPHandlerFixture struct {
