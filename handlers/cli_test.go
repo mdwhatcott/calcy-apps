@@ -3,40 +3,44 @@ package handlers
 import (
 	"bytes"
 	"errors"
+	"io"
 	"testing"
 
+	"github.com/mdwhatcott/calcy-apps/ext/gunit"
 	"github.com/mdwhatcott/calcy-apps/ext/should"
 	"github.com/mdwhatcott/calcy-lib/calcy"
 )
 
 func TestCLIHandler(t *testing.T) {
+	gunit.Run(t, &CLIHandlerFixture{})
+}
+
+type CLIHandlerFixture struct {
+	*gunit.Fixture
+}
+
+func (this *CLIHandlerFixture) handle(output io.Writer, args ...string) error {
+	return NewCLIHandler(calcy.Addition{}, output).Handle(args)
+}
+func (this *CLIHandlerFixture) TestCLIHandler() {
 	var output bytes.Buffer
-	handler := NewCLIHandler(calcy.Addition{}, &output)
-	err := handler.Handle([]string{"1", "2"})
-	should.So(t, err, should.BeNil)
-	should.So(t, output.String(), should.Equal, "3")
+	err := this.handle(&output, "1", "2")
+	this.So(err, should.BeNil)
+	this.So(output.String(), should.Equal, "3")
 }
-func TestCLIHandler_unsupportedOperation(t *testing.T) {
-	handler := NewCLIHandler(nil, nil)
-	err := handler.Handle(nil)
-	should.So(t, err, should.Wrap, errUnsupportedOperation)
+func (this *CLIHandlerFixture) TestUnsupportedOperation() {
+	this.So(NewCLIHandler(nil, nil).Handle(nil), should.Wrap, errUnsupportedOperation)
 }
-func TestCLIHandler_notEnoughArgumentsError(t *testing.T) {
-	handler := NewCLIHandler(calcy.Addition{}, nil)
-	err := handler.Handle([]string{""})
-	should.So(t, err, should.Wrap, errNotEnoughArguments)
+func (this *CLIHandlerFixture) TestNotEnoughArgumentsError() {
+	this.So(this.handle(nil, ""), should.Wrap, errNotEnoughArguments)
 }
-func TestCLIHandler_invalidArgumentError(t *testing.T) {
-	handler := NewCLIHandler(calcy.Addition{}, nil)
-	err := handler.Handle([]string{"NaN", "2"})
-	should.So(t, err, should.Wrap, errInvalidArgument)
-	err = handler.Handle([]string{"1", "NaN"})
-	should.So(t, err, should.Wrap, errInvalidArgument)
+func (this *CLIHandlerFixture) TestInvalidArgumentError() {
+	this.So(this.handle(nil, "NaN", "2"), should.Wrap, errInvalidArgument)
+	this.So(this.handle(nil, "1", "NaN"), should.Wrap, errInvalidArgument)
 }
-func TestCLIHandler_writeError(t *testing.T) {
+func (this *CLIHandlerFixture) TestWriteError() {
 	innerError := errors.New("write error")
-	handler := NewCLIHandler(calcy.Addition{}, &ErringWriter{err: innerError})
-	err := handler.Handle([]string{"1", "2"})
-	should.So(t, err, should.Wrap, errWrite)
-	should.So(t, err, should.Wrap, innerError)
+	err := this.handle(&ErringWriter{err: innerError}, "1", "2")
+	this.So(err, should.Wrap, errWrite)
+	this.So(err, should.Wrap, innerError)
 }

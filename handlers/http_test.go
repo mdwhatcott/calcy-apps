@@ -6,45 +6,35 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/mdwhatcott/calcy-apps/ext/gunit"
 	"github.com/mdwhatcott/calcy-apps/ext/should"
 )
 
-func TestHTTPHandler_404(t *testing.T) {
+func TestHTTPHandler(t *testing.T) {
+	gunit.Run(t, &HTTPHandlerFixture{})
+}
+
+type HTTPHandlerFixture struct {
+	*gunit.Fixture
+}
+
+func (this *HTTPHandlerFixture) assertResponse(path string, code int, body string) {
 	response := httptest.NewRecorder()
-	NewHTTPRouter().ServeHTTP(response, httptest.NewRequest(http.MethodGet, "/nope?a=1&b=2", nil))
-	should.So(t, response.Code, should.Equal, http.StatusNotFound)
+	NewHTTPRouter().ServeHTTP(response, httptest.NewRequest(http.MethodGet, path, nil))
+	this.So(response.Code, should.Equal, code)
+	this.So(strings.TrimSpace(response.Body.String()), should.Equal, body)
 }
-func TestHTTPHandler_200(t *testing.T) {
-	testHTTP200(t, "/add?a=1&b=2", "3")
-	testHTTP200(t, "/sub?a=5&b=3", "2")
-	testHTTP200(t, "/mul?a=3&b=4", "12")
-	testHTTP200(t, "/div?a=100&b=50", "2")
-	testHTTP200(t, "/bog?a=1&b=2", "45")
+func (this *HTTPHandlerFixture) Test404() {
+	this.assertResponse("/nope?a=1&b=2", http.StatusNotFound, "404 page not found")
 }
-func testHTTP200(t *testing.T, path, expectedResponseBody string) {
-	t.Run(strings.TrimLeft(path, "/"), func(t *testing.T) {
-		handler := NewHTTPRouter()
-		request := httptest.NewRequest(http.MethodGet, path, nil)
-		response := httptest.NewRecorder()
-		handler.ServeHTTP(response, request)
-		should.So(t, response.Code, should.Equal, http.StatusOK)
-		actualResponseBody := strings.TrimSpace(response.Body.String())
-		should.So(t, actualResponseBody, should.Equal, expectedResponseBody)
-	})
+func (this *HTTPHandlerFixture) Test200() {
+	this.assertResponse("/add?a=1&b=2", http.StatusOK, "3")
+	this.assertResponse("/sub?a=5&b=3", http.StatusOK, "2")
+	this.assertResponse("/mul?a=3&b=4", http.StatusOK, "12")
+	this.assertResponse("/div?a=100&b=50", http.StatusOK, "2")
+	this.assertResponse("/bog?a=1&b=2", http.StatusOK, "45")
 }
-func TestHTTPHandler_422_InvalidArgA(t *testing.T) {
-	handler := NewHTTPRouter()
-	request := httptest.NewRequest(http.MethodGet, "/add?a=NaN&b=2", nil)
-	response := httptest.NewRecorder()
-	handler.ServeHTTP(response, request)
-	should.So(t, response.Code, should.Equal, http.StatusUnprocessableEntity)
-	should.So(t, strings.TrimSpace(response.Body.String()), should.Equal, "invalid 'a' parameter: [NaN]")
-}
-func TestHTTPHandler_422_InvalidArgB(t *testing.T) {
-	handler := NewHTTPRouter()
-	request := httptest.NewRequest(http.MethodGet, "/add?a=1&b=NaN", nil)
-	response := httptest.NewRecorder()
-	handler.ServeHTTP(response, request)
-	should.So(t, response.Code, should.Equal, http.StatusUnprocessableEntity)
-	should.So(t, strings.TrimSpace(response.Body.String()), should.Equal, "invalid 'b' parameter: [NaN]")
+func (this *HTTPHandlerFixture) Test422() {
+	this.assertResponse("/add?a=NaN&b=2", http.StatusUnprocessableEntity, "invalid 'a' parameter: [NaN]")
+	this.assertResponse("/add?a=1&b=NaN", http.StatusUnprocessableEntity, "invalid 'b' parameter: [NaN]")
 }

@@ -74,12 +74,12 @@ func TestCSVHandler_WriteError(t *testing.T) {
 
 type ErringReader struct{ err error }
 
-func (this *ErringReader) Read(p []byte) (n int, err error) {
+func (this *ErringReader) Read([]byte) (int, error) {
 	return 0, this.err
 }
 
 type ErringWriter struct{ err error }
 
-func (this *ErringWriter) Write(p []byte) (n int, err error) {
+func (this *ErringWriter) Write([]byte) (int, error) {
 	return 0, this.err
 }
