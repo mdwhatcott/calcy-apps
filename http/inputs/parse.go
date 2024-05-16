@@ -5,7 +5,7 @@ import (
 	"net/url"
 	"strconv"
 
-	"github.com/mdwhatcott/calcy-apps/ext/shuttle"
+	"github.com/smarty/shuttle"
 )
 
 func parseInteger(query url.Values, key string) (parsed int, err error) {

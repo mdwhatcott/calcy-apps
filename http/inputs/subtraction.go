@@ -1,8 +1,13 @@
 package inputs
 
-import "net/http"
+import (
+	"net/http"
+
+	"github.com/smarty/shuttle"
+)
 
 type Subtraction struct {
+	shuttle.BaseInputModel
 	A int
 	B int
 }

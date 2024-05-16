@@ -1,8 +1,13 @@
 package inputs
 
-import "net/http"
+import (
+	"net/http"
+
+	"github.com/smarty/shuttle"
+)
 
 type Multiplication struct {
+	shuttle.BaseInputModel
 	A int
 	B int
 }

@@ -7,9 +7,10 @@ import (
 
 	"github.com/mdwhatcott/calcy-apps/app/commands"
 	"github.com/mdwhatcott/calcy-apps/app/contracts"
-	"github.com/mdwhatcott/calcy-apps/ext/shuttle"
 	"github.com/mdwhatcott/calcy-apps/http/inputs"
 	"github.com/mdwhatcott/calcy-apps/http/views"
+
+	"github.com/smarty/shuttle"
 )
 
 type Processor struct {
