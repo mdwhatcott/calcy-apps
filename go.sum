@@ -4,5 +4,7 @@ github.com/smarty/assertions v1.16.0 h1:EvHNkdRA4QHMrn75NZSoUQ/mAUXAYWfatfB01yTC
 github.com/smarty/assertions v1.16.0/go.mod h1:duaaFdCS0K9dnoM50iyek/eYINOZ64gbh1Xlf6LG7AI=
 github.com/smarty/gunit v1.5.0 h1:OmG6a/rgi7qCjlQis6VjXbvx/WqZ8I6xSlbfN4YB5MY=
 github.com/smarty/gunit v1.5.0/go.mod h1:uAeNibUD292KZRcg5OTy7lb6WR5++UC0BQOzNuiRzpU=
+github.com/smarty/httprouter v1.1.0 h1:KTMFP7fuiAwGQExHza2fWcEk1D/cRXh3h4lKT8JYgiE=
+github.com/smarty/httprouter v1.1.0/go.mod h1:AmsW/l2+n38IVqV1BazM2yzpJS85RFNGA8yj6NFaGHc=
 github.com/smarty/shuttle v1.1.2 h1:Y8poKrKLJvzMvFSxl1MGrLVtjtSNow0WJ/lbKPFA99g=
 github.com/smarty/shuttle v1.1.2/go.mod h1:dmUARDRJ+15wEFDf8AOIT+fNi5ifhfcHsYrSz3VVE/0=

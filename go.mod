@@ -6,5 +6,6 @@ require (
 	github.com/mdwhatcott/calcy-lib v1.0.0
 	github.com/smarty/assertions v1.16.0
 	github.com/smarty/gunit v1.5.0
+	github.com/smarty/httprouter v1.1.0
 	github.com/smarty/shuttle v1.1.2
 )
