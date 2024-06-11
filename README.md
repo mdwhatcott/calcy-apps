@@ -18,7 +18,7 @@ Rationale:
 
 - As test authors, we should declare what we actually expect instead of check for the presence of the opposite, which
   seems to be the norm in many Go projects out there in the wild.
-- We believe generic failure messages can still helpful and effective.
+- We believe generic failure messages can still be very helpful and effective.
 
 Bad:
 
@@ -423,3 +423,69 @@ Step 9 (drop-in smarty shuttle): Replace usage of your `shuttle` package with gi
 Step 10: Plumb the layers and depths of github.com/smarty/shuttle. Find code that corresponds with each of your more simple `shuttle` code. 
 
 Step 11: Pat yourself on the back. That was a lot of moving parts!
+
+-------------
+
+### Module D: `github.com/smarty/httprouter`
+
+Purpose: Fast, flexible routing of incoming HTTP requests based on request method and path (which can include wildcard elements).
+
+Rationale:
+
+- A file path is a representation of a tree structure, so let's leverage that kind of data structure. The built-in http request router (http.ServeMux) has been pretty limited up until a very recent version of Go, and it's still a bit more loosey-goosey than we'd prefer.
+
+Instructions:
+
+Step 1: Implement a package at `ext/httprouter` with the following elements:
+
+```go
+func New(routes ...Route) (http.Handler, error)
+
+type router struct {
+	root *treeNode
+}
+
+func (this *router) ServeHTTP(response http.ResponseWriter, request *http.Request) {
+	this.root.Resolve(request.Method, request.URL.Path).ServeHTTP(response, request)
+}
+
+type treeNode struct {
+	pathElement string
+	static      []*treeNode // FUTURE: wildcard and variable nodes...
+	handlers    *methodHandlers
+}
+
+func (this *treeNode) Add(route Route) error
+func (this *treeNode) Resolve(method, path string) http.Handler
+func notFoundHandler(response http.ResponseWriter, _ *http.Request)
+
+type methodHandlers struct {
+	get http.Handler // FUTURE: other methods
+}
+
+func (this *methodHandlers) Add(method string, handler http.Handler) bool
+func (this *methodHandlers) Resolve(method string) http.Handler
+func methodNotAllowedHandler(responseWriter http.ResponseWriter, _ *http.Request) 
+
+type Route struct {
+	Method  string
+	Path    string
+	Handler http.Handler
+}
+
+func ParseRoute(method string, path string, handler http.Handler) Route {
+	return Route{
+		Method:  method,
+		Path:    path,
+		Handler: handler,
+	}
+}
+```
+
+The idea here is that each slash-separated element of a path is represented as a level/node in a tree structure. We parse a registered route at startup to create the tree structure. Then at runtime we traverse the tree according to the incoming request path elements. If we found a matching terminal node, we serve the response from it, otherwise serve http 404 (not found) or, of the path matches, but the method doesn't match, serve http 415 (method not allowed). So, in summary, you'll need to process the path in slash-separate elements to construct and traverse a tree. (Don't forget to write tests.)
+
+Step 2: Install your new router in `http/routes.go`
+
+Step 3: (drop-in smarty httprouter): Replace usage of your `httprouter` package with github.com/smarty/httprouter
+
+Step 4: explore the code of smarty/httprouter and learn how it supports wildcard and variable path elements.
