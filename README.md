@@ -489,3 +489,65 @@ Step 2: Install your new router in `http/routes.go`
 Step 3: (drop-in smarty httprouter): Replace usage of your `httprouter` package with github.com/smarty/httprouter
 
 Step 4: explore the code of smarty/httprouter and learn how it supports wildcard and variable path elements.
+
+### Module E: `github.com/smarty/httpstatus`
+
+Purpose: Expose an HTTP route at `/status` that communicates the readiness of an application to serve requests.
+
+Rationale: Allow operations team to eventually deploy new versions of software alongside older versions to facilitate zero-downtime rollouts. The HTTP handler that responds to the `/status` request will respond with one of four status responses:
+
+1. Starting
+2. Healthy
+3. Failing
+4. Stopping
+
+At startup the handler will be in "Starting" mode. As a background goroutine succeeds in pinging some important resource (maybe a database), it will upgrade the mode to "Healthy". The status check will be repeated at regular intervals. If ever the check fails, the mode will transition to "Failing" until a check succeeds again. When the application is in process of shutting down, the mode will transition to "Stopping". Any mode but "Healthy" will result in HTTP 503 Service Unavailable.
+
+Instructions:
+
+Step 1: Implement a package at `/ext/httpstatus` with the following elements:
+
+```go
+type HealthCheck interface {
+	Status(ctx context.Context) error
+}
+
+type Handler struct {
+	state         uint32
+	hardContext   context.Context
+	softContext   context.Context
+	shutdown      context.CancelFunc
+	healthCheck   HealthCheck
+	timeout       time.Duration
+	frequency     time.Duration
+	shutdownDelay time.Duration
+}
+
+func NewHandler(ctx context.Context, check HealthCheck, timeout, frequency, shutdownDelay time.Duration) *Handler
+
+func (this *Handler) ServeHTTP(response http.ResponseWriter, _ *http.Request)
+func (this *Handler) Listen()
+func (this *Handler) Close() error
+
+const (
+	stateStarting = iota
+	stateHealthy
+	stateFailing
+	stateStopping
+)
+```
+
+Considerations:
+
+- At first all `ServeHTTP` needs to do is write the text "Starting" to the http response as plain text, which is what you'll focus on for the first unit test.
+- From there, things get interesting. The `Listen` method is long-lived and will be called from a different goroutine. It will run until the provided context is cancelled, which may happen as a result of `Close` being called. Once running the `Listen` method will call the provided `HealthCheck` and transition the `state` field accordingly. The `context.Context` provided will be used to create a derived/child context which will be passed to the `HealthCheck`. In the event that the health check returns no error value, transition to the 'healthy' state. In the event that the error represents a context cancellation (perhaps because of a timeout), transition to 'Stopping' and return from `Listen`. In the event that the error is not nil (and not a context cancellation), transition to 'Failing'. In all cases except for transitioning to 'Stopping', sleep for the provided `delay` before repeating the health check.
+- Testing suggestion: use very small time duration values for the timeout, frequency, and delay fields.
+- Testing suggestion: don't execute tests with the `-race` flag at first. (See 'Note' in next bullet point) 
+- NOTE: Because the `Listen` and `ServeHTTP` methods refer to the `state` field from different goroutines there is a very real possibility of a data race, creating undefined behavior (most likely a program crash). Use atomic operations or a mutex to protect against such an unpleasant outcome. Once that solution is in place, calling `go test` with `-race` should pass. Oh, and if your test cases reference any state over multiple goroutines you'll need to install similar atomic/mutex treatment there too. 
+- **Note to mentor:** While not very much behavior, this is tricky stuff. It may be more effective to pair program with the mentee and to refer often to github.com/smarty/httpstatus to really grasp the handling of the context.Context values, the atomic operations on the state field, and how the tests leverage the monitor interface to make the tests more deterministic given the concurrent nature of this component.
+
+Step 2: Install a new HTTP route at `/status` that points to the `Handler` in your new `/ext/httpstatus` package.
+
+Step 3: (drop-in smarty httpstatus): Replace usage of your `httpstatus` package with github.com/smarty/httpstatus (this will require getting to know various functional options).
+
+Step 4: explore the code of smarty/httpstatus and learn how it precomputes the 4 status handlers, as well as how it communicates with a monitor interface.
