@@ -548,6 +548,22 @@ Considerations:
 
 Step 2: Install a new HTTP route at `/status` that points to the `Handler` in your new `/ext/httpstatus` package.
 
+Because this app really doesn't talk with any external systems (DB, network, etc...) or have any operations that might fail, just use the following static health-check implementation:
+
+```go
+type StaticOKHealthCheck struct{}
+
+func (StaticOKHealthCheck) Status(ctx context.Context) error {
+	// Usually this is where we would ping a database, or perform some operation to verify that the domain is in a functional state.
+	select {
+	case <-ctx.Done():
+		return ctx.Err()
+	default:
+		return nil
+	}
+}
+```
+
 Step 3: (drop-in smarty httpstatus): Replace usage of your `httpstatus` package with github.com/smarty/httpstatus (this will require getting to know various functional options).
 
 Step 4: explore the code of smarty/httpstatus and learn how it precomputes the 4 status handlers, as well as how it communicates with a monitor interface.
