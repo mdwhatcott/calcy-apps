@@ -564,6 +564,10 @@ func (StaticOKHealthCheck) Status(ctx context.Context) error {
 }
 ```
 
+After starting your app you may notice that the response to the `/status` route is stuck on "Starting". This is probably because the `Listen` method wasn't invoked on a separate goroutine. So, what you'll need to do is initialize the status handler in the `main` package, invoke `go statusHandler.Listen()`, then pass the `statusHandler` to the `http.Router` func. Soon after starting the app, the `/status` route will result in a "Healthy" response.
+
+(NOTE: This last instruction introduces a code 'smell' in that we've initialized a goroutine with no regard for when or whether that goroutine will finish. This is an issue we'll deal with as we implement future modules.)
+
 Step 3: (drop-in smarty httpstatus): Replace usage of your `httpstatus` package with github.com/smarty/httpstatus (this will require getting to know various functional options).
 
 Step 4: explore the code of smarty/httpstatus and learn how it precomputes the 4 status handlers, as well as how it communicates with a monitor interface.
