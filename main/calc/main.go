@@ -7,13 +7,21 @@ import (
 	"time"
 
 	"github.com/mdwhatcott/calcy-apps/app/calculator"
-	"github.com/mdwhatcott/calcy-apps/ext/httpstatus"
 	HTTP "github.com/mdwhatcott/calcy-apps/http"
 	"github.com/mdwhatcott/calcy-lib/calcy"
+	"github.com/smarty/httpstatus"
 )
 
 func main() {
-	statusHandler := httpstatus.NewHandler(context.Background(), StaticOKHealthCheck{}, time.Second, time.Second, time.Second)
+	statusHandler := httpstatus.New(
+		httpstatus.Options.Context(context.Background()),
+		httpstatus.Options.HealthCheck(StaticOKHealthCheck{}),
+		httpstatus.Options.ResourceName("calcy-context"),
+		httpstatus.Options.DisplayName("calcy"),
+		httpstatus.Options.HealthCheckTimeout(time.Second),
+		httpstatus.Options.HealthCheckFrequency(time.Second),
+		httpstatus.Options.ShutdownDelay(time.Second),
+	)
 	go statusHandler.Listen()
 	appHandler := calculator.NewHandler(
 		calcy.Addition{},

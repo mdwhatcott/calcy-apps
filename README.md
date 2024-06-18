@@ -568,6 +568,16 @@ After starting your app you may notice that the response to the `/status` route 
 
 (NOTE: This last instruction introduces a code 'smell' in that we've initialized a goroutine with no regard for when or whether that goroutine will finish. This is an issue we'll deal with as we implement future modules.)
 
-Step 3: (drop-in smarty httpstatus): Replace usage of your `httpstatus` package with github.com/smarty/httpstatus (this will require getting to know various functional options).
+Step 3: (drop-in smarty httpstatus): Replace usage of your `httpstatus` package with github.com/smarty/httpstatus (this will require getting to know various functional options). You'll notice a JSON response with more info now (and instead of "Health", it's just "OK"):
+
+```
+$ curl "http://localhost:8080/status" 
+{
+  "compatibility": "calcy:OK",
+  "application": "calcy",
+  "resource": "calcy-context",
+  "state": "OK"
+}
+```
 
 Step 4: explore the code of smarty/httpstatus and learn how it precomputes the 4 status handlers, as well as how it communicates with a monitor interface.
