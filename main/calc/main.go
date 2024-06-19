@@ -7,9 +7,9 @@ import (
 	"time"
 
 	"github.com/mdwhatcott/calcy-apps/app/calculator"
-	"github.com/mdwhatcott/calcy-apps/ext/httpserver"
 	HTTP "github.com/mdwhatcott/calcy-apps/http"
 	"github.com/mdwhatcott/calcy-lib/calcy"
+	"github.com/smarty/httpserver/v2"
 	"github.com/smarty/httpstatus"
 )
 
@@ -34,13 +34,12 @@ func main() {
 	)
 	router := HTTP.Router(statusHandler, appHandler)
 	server := httpserver.New(
-		context.Background(),
-		logger,
-		time.Second,
-		"tcp",
-		"localhost:8080",
-		func(bool) {},
-		router,
+		httpserver.Options.Context(context.Background()),
+		httpserver.Options.Logger(logger),
+		httpserver.Options.ShutdownTimeout(time.Second),
+		httpserver.Options.ListenAddress("tcp://localhost:8080/"),
+		httpserver.Options.ListenReady(func(bool) {}),
+		httpserver.Options.Handler(router),
 	)
 	server.Listen()
 }
