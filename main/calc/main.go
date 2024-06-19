@@ -3,16 +3,18 @@ package main
 import (
 	"context"
 	"log"
-	"net/http"
+	"os"
 	"time"
 
 	"github.com/mdwhatcott/calcy-apps/app/calculator"
+	"github.com/mdwhatcott/calcy-apps/ext/httpserver"
 	HTTP "github.com/mdwhatcott/calcy-apps/http"
 	"github.com/mdwhatcott/calcy-lib/calcy"
 	"github.com/smarty/httpstatus"
 )
 
 func main() {
+	logger := log.New(os.Stdout, "", log.LstdFlags|log.Lmicroseconds|log.Llongfile)
 	statusHandler := httpstatus.New(
 		httpstatus.Options.Context(context.Background()),
 		httpstatus.Options.HealthCheck(StaticOKHealthCheck{}),
@@ -23,18 +25,24 @@ func main() {
 		httpstatus.Options.ShutdownDelay(time.Second),
 	)
 	go statusHandler.Listen()
+
 	appHandler := calculator.NewHandler(
 		calcy.Addition{},
 		calcy.Subtraction{},
 		calcy.Multiplication{},
 		calcy.Division{},
 	)
-	endpoint := "localhost:8080"
-	log.Println("Listening on", endpoint)
-	err := http.ListenAndServe(endpoint, HTTP.Router(statusHandler, appHandler))
-	if err != nil {
-		log.Fatalln(err)
-	}
+	router := HTTP.Router(statusHandler, appHandler)
+	server := httpserver.New(
+		context.Background(),
+		logger,
+		time.Second,
+		"tcp",
+		"localhost:8080",
+		func(bool) {},
+		router,
+	)
+	server.Listen()
 }
 
 type StaticOKHealthCheck struct{}
