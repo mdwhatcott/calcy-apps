@@ -581,3 +581,68 @@ $ curl "http://localhost:8080/status"
 ```
 
 Step 4: explore the code of smarty/httpstatus and learn how it precomputes the 4 status handlers, as well as how it communicates with a monitor interface.
+
+### Module F: `github.com/smarty/httpserver`
+
+Purpose: Clean shutdown of an http server (active connections given a chance to close after a timeout).
+
+Rationale: Being able to rollout new versions of software without incurring any down-time is a huge operational win.
+
+Instructions:
+
+Step 1: Implement a package at `/ext/httpserver` with the following elements:
+
+```
+type logger interface {
+	Printf(string, ...any)
+}
+type httpServer interface {
+	Serve(listener net.Listener) error
+	Shutdown(ctx context.Context) error
+}
+type Server struct {
+	logger          logger
+	softContext     context.Context
+	softShutdown    context.CancelFunc
+	hardContext     context.Context
+	hardShutdown    context.CancelFunc
+	shutdownTimeout time.Duration
+	network         string
+	address         string
+	ready           func(bool)
+	server          httpServer
+}
+func NewServer(
+	ctx context.Context, logger logger,
+	shutdownTimeout time.Duration,
+	network string, address string,
+	ready func(bool), server httpServer,
+) *Server {
+	softContext, softShutdown := context.WithCancel(ctx)
+	hardContext, hardShutdown := context.WithCancel(ctx)
+	return &Server{
+		logger:          logger,
+		softContext:     softContext,
+		softShutdown:    softShutdown,
+		hardContext:     hardContext,
+		hardShutdown:    hardShutdown,
+		shutdownTimeout: shutdownTimeout,
+		network:         network,
+		address:         address,
+		ready:           ready,
+		server:          server,
+	}
+}
+func (this *Server) Listen()...
+```
+
+The Listen method will need to launch a few goroutines, managed by a waitgroup:
+
+1. Create listener pass that listener to the provided httpServer's Serve method.
+2. Watch for shutdown signal (softContext cancellation) and call httpServer's Shutdown method (and clean everything up).
+
+Like the httpstatus module, not a lot of code is required, but it's non-trivial. Consider reviewing the actual httpserver code, or the code associated with the commit that created these instructions.
+
+Step 2: Install the new server in main over the top of "http.ListenAndServe".
+
+Step 3: (drop-in smarty httpserver): Replace usage of your `httpserver` package with github.com/smarty/httpserver (this will require getting to know various functional options).
