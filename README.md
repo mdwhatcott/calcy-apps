@@ -646,3 +646,51 @@ Like the httpstatus module, not a lot of code is required, but it's non-trivial.
 Step 2: Install the new server in main over the top of "http.ListenAndServe".
 
 Step 3: (drop-in smarty httpserver): Replace usage of your `httpserver` package with github.com/smarty/httpserver (this will require getting to know various functional options).
+
+### Module G: `github.com/smarty/dominoes`
+
+Purpose: Manage lifecycle of long-lived goroutines and facilitate clean shutdown of all managed resources.
+
+Rationale: You've probably noticed that the main function is getting a bit messier, with a few long-lived goroutines that can't be shut down without shutting down the whole process. Enterprise software wireup can be greatly simplified if long-lived components implement a few simple interfaces (Listen, Close) and this will help us get one step closer to zero-downtime deployments.
+
+Instructions:
+
+Step 1: Implement a package at `/ext/dominoes` with the following elements:
+
+```
+type Listener interface {
+	Listen()
+}
+type ListenCloser interface {
+	Listener
+	io.Closer
+}
+type logger interface {
+	Printf(string, ...interface{})
+}
+
+type linkedListener struct {
+	current  Listener
+	next     Listener
+	ctx      context.Context
+	shutdown context.CancelFunc
+	managed  []io.Closer
+	logger   logger
+}
+
+func New(listeners []Listener, resources []io.Closer) ListenCloser
+
+func (this *linkedListener) Listen()
+
+func (this *linkedListener) Close() error
+```
+
+The linkedListener is intended to implement a linked list of listeners--clever name, right?! So, the constructor employs recursion to build up a linked list structure where each provided `Listener` becomes a separate instance of `linkedListener` where `current` is the `Listener` from the constructor, and next is a subsequent instance of `linkedListener` that points to the next provided `Listener` from the constructor. The very last `linkedListener` will hold onto any `managed` resources.
+
+When Listen is called on the first/outermost instance, it will launch it's current listener's `Listen` method on a new goroutine, and then recursively call `Listen` on the next `linkedListener` instance. The last instance will not launch its listener's `Listen` method on a new goroutine, but will block.
+
+Finally, a cancellable context will allow the `linkedListener`'s Listen method to block until the Close method is called (from another goroutine), causing a cascading exit of all Listen methods (and closing of all managed resources) as well as a cascading shutdown via the Close methods all being called (on any Listeners that implement one).
+
+Step 2: Install the new dominoes listener in main, providing the statusHandler and the server as listeners. Remember to call Listen on the dominoes listener.
+
+Step 3: (drop-in smarty dominoes): Replace usage of your `dominoes` package with github.com/smarty/dominoes (this will require getting to know various functional options).

@@ -2,11 +2,13 @@ package main
 
 import (
 	"context"
+	"io"
 	"log"
 	"os"
 	"time"
 
 	"github.com/mdwhatcott/calcy-apps/app/calculator"
+	"github.com/mdwhatcott/calcy-apps/ext/dominoes"
 	HTTP "github.com/mdwhatcott/calcy-apps/http"
 	"github.com/mdwhatcott/calcy-lib/calcy"
 	"github.com/smarty/httpserver/v2"
@@ -24,7 +26,6 @@ func main() {
 		httpstatus.Options.HealthCheckFrequency(time.Second),
 		httpstatus.Options.ShutdownDelay(time.Second),
 	)
-	go statusHandler.Listen()
 
 	appHandler := calculator.NewHandler(
 		calcy.Addition{},
@@ -41,7 +42,12 @@ func main() {
 		httpserver.Options.ListenReady(func(bool) {}),
 		httpserver.Options.Handler(router),
 	)
-	server.Listen()
+
+	listener := dominoes.New(
+		[]dominoes.Listener{statusHandler, server},
+		[]io.Closer{},
+	)
+	listener.Listen()
 }
 
 type StaticOKHealthCheck struct{}
