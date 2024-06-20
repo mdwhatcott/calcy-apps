@@ -2,15 +2,14 @@ package main
 
 import (
 	"context"
-	"io"
 	"log"
 	"os"
 	"time"
 
 	"github.com/mdwhatcott/calcy-apps/app/calculator"
-	"github.com/mdwhatcott/calcy-apps/ext/dominoes"
 	HTTP "github.com/mdwhatcott/calcy-apps/http"
 	"github.com/mdwhatcott/calcy-lib/calcy"
+	"github.com/smarty/dominoes"
 	"github.com/smarty/httpserver/v2"
 	"github.com/smarty/httpstatus"
 )
@@ -44,8 +43,7 @@ func main() {
 	)
 
 	listener := dominoes.New(
-		[]dominoes.Listener{statusHandler, server},
-		[]io.Closer{},
+		dominoes.Options.AddListeners(statusHandler, server),
 	)
 	listener.Listen()
 }

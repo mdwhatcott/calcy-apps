@@ -2,6 +2,8 @@ github.com/mdwhatcott/calcy-lib v1.0.0 h1:lEfgDb/QMjCteNcZ3T1fVV4ibjX5IcKkRls5yU
 github.com/mdwhatcott/calcy-lib v1.0.0/go.mod h1:UEU4DhcOcRCxcIhVi6Hgj5SWwP0k7Pa/7vkl9GSJzII=
 github.com/smarty/assertions v1.16.0 h1:EvHNkdRA4QHMrn75NZSoUQ/mAUXAYWfatfB01yTCzfY=
 github.com/smarty/assertions v1.16.0/go.mod h1:duaaFdCS0K9dnoM50iyek/eYINOZ64gbh1Xlf6LG7AI=
+github.com/smarty/dominoes v1.6.0 h1:JyaJlVf5ME+8QxaJDeRj4DLaSe/HIohEy8+3q/PMeBw=
+github.com/smarty/dominoes v1.6.0/go.mod h1:5208BXeYMmp0sneDJys9Dj0ovnNv5IIAoled1ctYiIQ=
 github.com/smarty/gunit v1.5.0 h1:OmG6a/rgi7qCjlQis6VjXbvx/WqZ8I6xSlbfN4YB5MY=
 github.com/smarty/gunit v1.5.0/go.mod h1:uAeNibUD292KZRcg5OTy7lb6WR5++UC0BQOzNuiRzpU=
 github.com/smarty/httprouter v1.1.0 h1:KTMFP7fuiAwGQExHza2fWcEk1D/cRXh3h4lKT8JYgiE=
