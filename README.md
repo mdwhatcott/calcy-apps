@@ -65,7 +65,7 @@ func (negated) Equal(actual any, expected ...any) error // TODO
 func (negated) BeNil(actual any, _ ...any) error        // TODO
 ```
 
-Step 2: Rewrite assertions in your tests to use your new package, verifying that a assertions fail and pass as expected,
+Step 2: Rewrite assertions in your tests to use your new package, verifying that assertions fail and pass as expected,
 and that failure messages are helpful. Spoiler: github.com/mdwhatcott/tiny-should
 
 If this is your first time implementing a testing tool, congratulations! You've taken your first step into a larger
