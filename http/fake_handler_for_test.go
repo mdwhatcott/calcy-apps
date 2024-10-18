@@ -3,7 +3,7 @@ package http
 import (
 	"context"
 
-	"github.com/mdwhatcott/calcy-apps/app/commands"
+	"github.com/mdw-smarty/calc-apps/app/commands"
 )
 
 type FakeApplicationHandler struct {

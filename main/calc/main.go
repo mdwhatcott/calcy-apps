@@ -6,9 +6,9 @@ import (
 	"os"
 	"time"
 
-	"github.com/mdwhatcott/calcy-apps/app/calculator"
-	HTTP "github.com/mdwhatcott/calcy-apps/http"
-	"github.com/mdwhatcott/calcy-lib/calcy"
+	"github.com/mdw-smarty/calc-apps/app/calculator"
+	HTTP "github.com/mdw-smarty/calc-apps/http"
+	"github.com/mdw-smarty/calc-lib/calc"
 	"github.com/smarty/dominoes"
 	"github.com/smarty/httpserver/v2"
 	"github.com/smarty/httpstatus"
@@ -19,18 +19,18 @@ func main() {
 	statusHandler := httpstatus.New(
 		httpstatus.Options.Context(context.Background()),
 		httpstatus.Options.HealthCheck(StaticOKHealthCheck{}),
-		httpstatus.Options.ResourceName("calcy-context"),
-		httpstatus.Options.DisplayName("calcy"),
+		httpstatus.Options.ResourceName("calc-context"),
+		httpstatus.Options.DisplayName("calc"),
 		httpstatus.Options.HealthCheckTimeout(time.Second),
 		httpstatus.Options.HealthCheckFrequency(time.Second),
 		httpstatus.Options.ShutdownDelay(time.Second),
 	)
 
 	appHandler := calculator.NewHandler(
-		calcy.Addition{},
-		calcy.Subtraction{},
-		calcy.Multiplication{},
-		calcy.Division{},
+		calc.Addition{},
+		calc.Subtraction{},
+		calc.Multiplication{},
+		calc.Division{},
 	)
 	router := HTTP.Router(statusHandler, appHandler)
 	server := httpserver.New(

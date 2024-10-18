@@ -4,7 +4,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/mdwhatcott/calcy-apps/handlers"
+	"github.com/mdw-smarty/calc-apps/handlers"
 )
 
 func main() {

@@ -5,8 +5,8 @@ import (
 	"log"
 	"os"
 
-	"github.com/mdwhatcott/calcy-apps/handlers"
-	"github.com/mdwhatcott/calcy-lib/calcy"
+	"github.com/mdw-smarty/calc-apps/handlers"
+	"github.com/mdw-smarty/calc-lib/calc"
 )
 
 func main() {
@@ -24,9 +24,9 @@ func main() {
 }
 
 var calculators = map[string]handlers.Calculator{
-	"+": calcy.Addition{},
-	"-": calcy.Subtraction{},
-	"*": calcy.Multiplication{},
-	"/": calcy.Division{},
-	"?": calcy.Bogus{Offset: 42},
+	"+": calc.Addition{},
+	"-": calc.Subtraction{},
+	"*": calc.Multiplication{},
+	"/": calc.Division{},
+	"?": calc.Bogus{Offset: 42},
 }

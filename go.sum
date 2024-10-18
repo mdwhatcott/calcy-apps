@@ -1,5 +1,5 @@
-github.com/mdwhatcott/calcy-lib v1.0.0 h1:lEfgDb/QMjCteNcZ3T1fVV4ibjX5IcKkRls5yUhJA3c=
-github.com/mdwhatcott/calcy-lib v1.0.0/go.mod h1:UEU4DhcOcRCxcIhVi6Hgj5SWwP0k7Pa/7vkl9GSJzII=
+github.com/mdw-smarty/calc-lib v1.0.2 h1:7Wj2aJK6wMg7UpGmexJAi/Swxeu26IwI5a2/qjIn9pU=
+github.com/mdw-smarty/calc-lib v1.0.2/go.mod h1:osCC5X88dzk7yQiRQvxd1VSWucmo5FrTJ5SDSo872vw=
 github.com/smarty/assertions v1.16.0 h1:EvHNkdRA4QHMrn75NZSoUQ/mAUXAYWfatfB01yTCzfY=
 github.com/smarty/assertions v1.16.0/go.mod h1:duaaFdCS0K9dnoM50iyek/eYINOZ64gbh1Xlf6LG7AI=
 github.com/smarty/dominoes v1.6.0 h1:JyaJlVf5ME+8QxaJDeRj4DLaSe/HIohEy8+3q/PMeBw=

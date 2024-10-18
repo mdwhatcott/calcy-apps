@@ -34,7 +34,7 @@ func TestCSV(t *testing.T) {
 		t.Skip("long-running test")
 	}
 	stdOut := &bytes.Buffer{}
-	cmd := exec.Command("go", "run", "github.com/mdwhatcott/calcy-apps/main/calc-csv")
+	cmd := exec.Command("go", "run", "github.com/mdw-smarty/calc-apps/main/calc-csv")
 	cmd.Stdin = strings.NewReader(inputCSV)
 	cmd.Stdout = stdOut
 

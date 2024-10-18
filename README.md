@@ -1,10 +1,10 @@
-# calcy-apps
+# calc-apps
 
 > What I cannot create, I do not understand. -Richard Feynman
 
 Phase 2 of a study in polymorphic deployment of a package across multiple UIs.
 
-See github.com/mdwhatcott/calcy-lib for the first part.
+See github.com/mdw-smarty/calc-lib for the first part.
 
 --------
 
@@ -390,10 +390,10 @@ Main:
 ```go
 func main() {
 	appHandler := calculator.NewHandler(
-		calcy.Addition{},
-		calcy.Subtraction{},
-		calcy.Multiplication{},
-		calcy.Division{},
+		calc.Addition{},
+		calc.Subtraction{},
+		calc.Multiplication{},
+		calc.Division{},
 	)
 	endpoint := "localhost:8080"
 	log.Println("Listening on", endpoint)
@@ -575,9 +575,9 @@ Step 3: (drop-in smarty httpstatus): Replace usage of your `httpstatus` package 
 ```
 $ curl "http://localhost:8080/status" 
 {
-  "compatibility": "calcy:OK",
-  "application": "calcy",
-  "resource": "calcy-context",
+  "compatibility": "calc:OK",
+  "application": "calc",
+  "resource": "calc-context",
   "state": "OK"
 }
 ```

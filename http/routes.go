@@ -3,8 +3,8 @@ package http
 import (
 	"net/http"
 
-	"github.com/mdwhatcott/calcy-apps/app/contracts"
-	"github.com/mdwhatcott/calcy-apps/http/inputs"
+	"github.com/mdw-smarty/calc-apps/app/contracts"
+	"github.com/mdw-smarty/calc-apps/http/inputs"
 
 	"github.com/smarty/httprouter"
 	"github.com/smarty/shuttle"

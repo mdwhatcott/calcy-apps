@@ -6,7 +6,7 @@ import (
 	"io"
 	"testing"
 
-	"github.com/mdwhatcott/calcy-lib/calcy"
+	"github.com/mdw-smarty/calc-lib/calc"
 	"github.com/smarty/assertions/should"
 	"github.com/smarty/gunit"
 )
@@ -20,7 +20,7 @@ type CLIHandlerFixture struct {
 }
 
 func (this *CLIHandlerFixture) handle(output io.Writer, args ...string) error {
-	return NewCLIHandler(calcy.Addition{}, output).Handle(args)
+	return NewCLIHandler(calc.Addition{}, output).Handle(args)
 }
 func (this *CLIHandlerFixture) TestCLIHandler() {
 	var output bytes.Buffer

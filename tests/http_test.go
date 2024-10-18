@@ -16,7 +16,7 @@ func TestHTTP(t *testing.T) {
 	if testing.Short() {
 		t.Skip("long-running test")
 	}
-	cmd := exec.Command("go", "run", "github.com/mdwhatcott/calcy-apps/main/calc-http")
+	cmd := exec.Command("go", "run", "github.com/mdw-smarty/calc-apps/main/calc-http")
 	err := cmd.Start()
 	if err != nil {
 		t.Fatal("unexpected error:", err)

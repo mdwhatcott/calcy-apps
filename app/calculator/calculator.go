@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/mdwhatcott/calcy-apps/app/commands"
+	"github.com/mdw-smarty/calc-apps/app/commands"
 )
 
 type Calculator interface {

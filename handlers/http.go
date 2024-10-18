@@ -6,16 +6,16 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/mdwhatcott/calcy-lib/calcy"
+	"github.com/mdw-smarty/calc-lib/calc"
 )
 
 func NewHTTPRouter() http.Handler {
 	h := http.NewServeMux()
-	h.Handle("/add", NewHTTPHandler(calcy.Addition{}))
-	h.Handle("/sub", NewHTTPHandler(calcy.Subtraction{}))
-	h.Handle("/mul", NewHTTPHandler(calcy.Multiplication{}))
-	h.Handle("/div", NewHTTPHandler(calcy.Division{}))
-	h.Handle("/bog", NewHTTPHandler(calcy.Bogus{Offset: 42}))
+	h.Handle("/add", NewHTTPHandler(calc.Addition{}))
+	h.Handle("/sub", NewHTTPHandler(calc.Subtraction{}))
+	h.Handle("/mul", NewHTTPHandler(calc.Multiplication{}))
+	h.Handle("/div", NewHTTPHandler(calc.Division{}))
+	h.Handle("/bog", NewHTTPHandler(calc.Bogus{Offset: 42}))
 	return h
 }
 

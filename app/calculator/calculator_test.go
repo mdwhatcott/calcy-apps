@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/mdwhatcott/calcy-apps/app/commands"
+	"github.com/mdw-smarty/calc-apps/app/commands"
 	"github.com/smarty/assertions/should"
 	"github.com/smarty/gunit"
 )

@@ -12,7 +12,7 @@ func TestCLI(t *testing.T) {
 	if testing.Short() {
 		t.Skip("long-running test")
 	}
-	cmd := exec.Command("go", "run", "github.com/mdwhatcott/calcy-apps/main/calc-cli", "-op", "+", "3", "4")
+	cmd := exec.Command("go", "run", "github.com/mdw-smarty/calc-apps/main/calc-cli", "-op", "+", "3", "4")
 
 	out, err := cmd.CombinedOutput()
 

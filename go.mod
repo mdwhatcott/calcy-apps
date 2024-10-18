@@ -1,9 +1,9 @@
-module github.com/mdwhatcott/calcy-apps
+module github.com/mdw-smarty/calc-apps
 
 go 1.22
 
 require (
-	github.com/mdwhatcott/calcy-lib v1.0.0
+	github.com/mdw-smarty/calc-lib v1.0.2
 	github.com/smarty/assertions v1.16.0
 	github.com/smarty/dominoes v1.6.0
 	github.com/smarty/gunit v1.5.0

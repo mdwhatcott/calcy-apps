@@ -8,7 +8,7 @@ import (
 	"log"
 	"strconv"
 
-	"github.com/mdwhatcott/calcy-lib/calcy"
+	"github.com/mdw-smarty/calc-lib/calc"
 )
 
 type CSVHandler struct {
@@ -79,9 +79,9 @@ var (
 )
 
 var calculators = map[string]Calculator{
-	"+": calcy.Addition{},
-	"-": calcy.Subtraction{},
-	"*": calcy.Multiplication{},
-	"/": calcy.Division{},
-	"?": calcy.Bogus{Offset: 42},
+	"+": calc.Addition{},
+	"-": calc.Subtraction{},
+	"*": calc.Multiplication{},
+	"/": calc.Division{},
+	"?": calc.Bogus{Offset: 42},
 }

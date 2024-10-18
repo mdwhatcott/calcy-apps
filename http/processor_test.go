@@ -5,9 +5,9 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/mdwhatcott/calcy-apps/app/commands"
-	"github.com/mdwhatcott/calcy-apps/http/inputs"
-	"github.com/mdwhatcott/calcy-apps/http/views"
+	"github.com/mdw-smarty/calc-apps/app/commands"
+	"github.com/mdw-smarty/calc-apps/http/inputs"
+	"github.com/mdw-smarty/calc-apps/http/views"
 	"github.com/smarty/assertions/should"
 	"github.com/smarty/gunit"
 )

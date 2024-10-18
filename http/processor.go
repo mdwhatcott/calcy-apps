@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/mdwhatcott/calcy-apps/app/commands"
-	"github.com/mdwhatcott/calcy-apps/app/contracts"
-	"github.com/mdwhatcott/calcy-apps/http/inputs"
-	"github.com/mdwhatcott/calcy-apps/http/views"
+	"github.com/mdw-smarty/calc-apps/app/commands"
+	"github.com/mdw-smarty/calc-apps/app/contracts"
+	"github.com/mdw-smarty/calc-apps/http/inputs"
+	"github.com/mdw-smarty/calc-apps/http/views"
 
 	"github.com/smarty/shuttle"
 )
